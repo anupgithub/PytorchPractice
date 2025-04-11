@@ -179,3 +179,30 @@ if __name__ == "__main__":
     rank = int(os.environ["RANK"])
     world_size = int(os.environ["WORLD_SIZE"])
     demo_ddp(rank, world_size)
+
+
+# ----------------------------
+# README SECTION
+# ----------------------------
+# This script demonstrates how to train a tiny Transformer model using PyTorch DistributedDataParallel (DDP).
+# It includes a fake token-level dataset and logs output for each rank in a 4-process setup.
+# 
+# Features:
+# - Uses torchrun for launching multiple processes.
+# - Uses Gloo backend for CPU-based training.
+# - Includes logging, checkpoint saving, and resume functionality.
+# - Model gradients are synchronized using AllReduce during backward pass.
+#
+# To run:
+# $ rm ddp_store_run1
+# $ RUN_ID=run1 torchrun --nproc_per_node=4 train_transformer_ddp.py
+#
+# Checkpointing:
+# - Only rank 0 saves the checkpoint to avoid file contention.
+# - On restart, all ranks read the checkpoint metadata from rank 0.
+# - The checkpoint includes model state, optimizer state, and epoch.
+#
+# Next steps:
+# - Try extending to sharded checkpointing using `torch.distributed.checkpoint`.
+# - Convert model to use GPU and NCCL for larger-scale training.
+# - Use a real dataset for fine-tuning NLP tasks.
